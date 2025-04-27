@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pip-aide"
-version = "1.0.1"
+version = "1.0.2"
 description = "AI-powered pip install helper"
 authors = [{name="不做了睡大觉", email="stakeswky@gmail.com"}]
 requires-python = ">=3.7"

@@ -12,6 +12,7 @@ import configparser
 import subprocess
 import shlex
 import logging
+import platform
 from urllib.parse import urlparse, urlunparse
 from urllib.error import URLError
 from http.client import HTTPException
@@ -205,16 +206,67 @@ def get_message(key, lang=None, **kwargs):
         return message_template
 
 def get_machine_id():
-    """获取唯一的机器标识"""
+    """
+    获取唯一的机器标识
+    """
     try:
-        mac = uuid.getnode()
-        if (mac >> 40) % 2:
-            return str(uuid.uuid1())
-        else:
-            return hex(mac)
-    except Exception as e:
-        logger.debug(f"Error getting machine ID, using fallback: {e}")
-        return str(uuid.uuid1())
+        # 尝试使用uuid1，但这可能在一些系统上不可用
+        machine_id = str(uuid.getnode())
+    except:
+        # 如果无法获取mac地址，生成一个随机ID
+        machine_id = str(uuid.uuid4())
+    
+    # 简单的哈希标识，避免直接发送机器信息
+    hashed_id = "0x" + hex(abs(hash(machine_id)))[2:10]
+    
+    return hashed_id
+
+def get_system_info():
+    """
+    收集系统和Python版本信息，帮助AI更准确分析安装问题
+    """
+    info = {}
+    
+    # Python版本信息
+    info["python_version"] = sys.version.split()[0]
+    info["python_full_version"] = sys.version
+    info["python_implementation"] = platform.python_implementation()
+    
+    # 系统信息
+    info["os_system"] = platform.system()
+    info["os_release"] = platform.release()
+    info["os_version"] = platform.version()
+    info["machine_type"] = platform.machine()
+    info["architecture"] = platform.architecture()[0]
+    
+    # pip版本
+    try:
+        pip_version_output = subprocess.check_output(["pip", "--version"], 
+                                             stderr=subprocess.STDOUT, 
+                                             universal_newlines=True).strip()
+        info["pip_version"] = pip_version_output
+    except:
+        info["pip_version"] = "Unknown"
+    
+    # setuptools版本
+    try:
+        import pkg_resources
+        setuptools_version = pkg_resources.get_distribution("setuptools").version
+        info["setuptools_version"] = setuptools_version
+    except:
+        info["setuptools_version"] = "Unknown"
+    
+    # 编译器信息（如果可用）
+    if platform.system() == "Linux":
+        try:
+            gcc_version = subprocess.check_output(["gcc", "--version"], 
+                                                stderr=subprocess.STDOUT, 
+                                                universal_newlines=True).split("\n")[0]
+            info["gcc_version"] = gcc_version
+        except:
+            info["gcc_version"] = "Unknown"
+    
+    return info
 
 def run_command(command_args, timeout=600):
     """执行命令并返回退出码、标准输出和标准错误"""
@@ -391,9 +443,19 @@ def get_ai_suggestion(error_context, server_url, timeout=30, retries=2, lang='en
         str: AI 的建议，如果无法获取则返回 None
     """
     machine_id = get_machine_id()
+    
+    # 收集系统和Python版本信息
+    system_info = get_system_info()
+    
+    # 将系统信息格式化为可读文本
+    system_info_text = "\n".join([f"{k}: {v}" for k, v in system_info.items()])
+    
+    # 合并错误上下文和系统信息
+    enhanced_context = f"{error_context}\n\n--- SYSTEM INFO ---\n{system_info_text}"
+    
     payload = {
         "machine_id": machine_id,
-        "error_context": error_context
+        "error_context": enhanced_context
     }
     
     headers = {

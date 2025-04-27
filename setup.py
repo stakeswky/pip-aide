@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pip-aide",
-    version="1.0.1",
+    version="1.0.2",
     description="AI-powered pip install helper",
     author="不做了睡大觉",
     author_email="stakeswky@gmail.com",

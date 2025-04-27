@@ -94,19 +94,34 @@ async def analyze_error(data: AnalyzeErrorRequest):
     prompt = f"""
 You are an expert Python package installation troubleshooter.
 The user encountered an error trying to install a Python package using pip.
-Here is the relevant error log:
+The information below includes both the error log AND system information.
 
---- ERROR LOG ---
 {data.error_context}
---- END ERROR LOG ---
 
-Please analyze this error and suggest ONE or TWO specific, single-line command-line commands that might fix this issue.
-Focus ONLY on `pip install ...` commands or `python -m pip install ...` commands. For example, suggest upgrading pip/setuptools/wheel, installing missing build dependencies available on PyPI, or using flags like --no-cache-dir.
+Please analyze this error carefully, considering the Python version, system information, and pip version.
+Pay special attention to:
+1. Version compatibility issues between the package and Python version
+2. Architecture compatibility issues (32-bit vs 64-bit)
+3. Operating system specific requirements
+4. Missing system dependencies that might be indicated by the error
+
+Focus ONLY on `pip install ...` commands or `python -m pip install ...` commands. For example, suggest:
+- Upgrading pip/setuptools/wheel
+- Installing specific versions compatible with the user's Python version
+- Using appropriate flags (--no-cache-dir, --no-binary, etc.)
+- Installing missing Python dependencies available on PyPI
+
 Do NOT suggest system package manager commands (apt, yum, brew, etc.) or commands requiring sudo.
 Do NOT suggest commands that modify files or environment variables.
+
 Format EACH suggested command clearly on its own line, enclosed in triple backticks. Example:
+```
 pip install --upgrade setuptools wheel
-pip install some-build-dependency
+```
+```
+pip install some-package==1.2.3
+```
+
 If you are absolutely certain no simple `pip` command can fix this (e.g., it's clearly a compiler issue needing system libraries, or a typo in a requirements file like `requirments.txt: misspelled-package==1.0`), respond ONLY with the word "UNCERTAIN".
 """
 
@@ -154,4 +169,4 @@ If you are absolutely certain no simple `pip` command can fix this (e.g., it's c
     return response_payload
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=10014)
