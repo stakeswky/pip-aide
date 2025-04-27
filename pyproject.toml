@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pip-aide"
+version = "1.0.1"
+description = "AI-powered pip install helper"
+authors = [{name="不做了睡大觉", email="stakeswky@gmail.com"}]
+requires-python = ">=3.7"
+dependencies = ["requests"]
+
+[project.scripts]
+pip-aide = "pip_aide.cli:main"
+
+[project.urls]
+"Homepage" = "https://github.com/stakeswky/pip-aide"
+"Documentation" = "https://github.com/stakeswky/pip-aide#readme"

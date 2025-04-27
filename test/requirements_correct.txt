@@ -1,0 +1,4 @@
+# This file should install without errors
+requests
+flask>=2.0
+colorama

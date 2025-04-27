@@ -1,0 +1,5 @@
+# This file should fail completely
+numpytypo
+requestssss
+flaskxxx
+thispackagedoesnotexistforsure

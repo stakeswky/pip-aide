@@ -1,0 +1,56 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Distribution / packaging
+/dist/
+/build/
+*.egg-info/
+*.egg
+*.whl
+*.tar.gz
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Environment & secrets
+.env
+.env.*
+
+# Logs
+pipai_logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Test outputs
+htmlcov/
+.coverage
+.tox/
+
+# Misc
+*.bak
+*.swp
+
+# Ignore pip-aide analytics and user-specific config
+~/.config/pip-aide/
+~/.config/pip/
+~/.pip/
+
+# Ignore notebook checkpoints
+.ipynb_checkpoints/
+
+# pip-aide package
+pipa.py
+
+.wrangler

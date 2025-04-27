@@ -1,0 +1,5 @@
+# This file has some errors
+requests # Correct
+flask>=2.0 # Correct
+nonexistentpackage12345 # Incorrect - likely doesn't exist
+colorama==0.0.0.0.1 # Incorrect - version doesn't exist
