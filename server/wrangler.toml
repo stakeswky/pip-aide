@@ -5,12 +5,12 @@ compatibility_date = "2025-04-27"
 # KV命名空间配置
 # 请替换XXX为实际的KV命名空间ID，可通过运行 wrangler kv:namespace list 查看
 kv_namespaces = [
-  { binding = "LOGS_KV", id = "e760942683b041ba8aec1421762b6d94" }
+  { binding = "LOGS_KV", id = "YOUR_KV_ID" }
 ]
 
 # 环境变量配置（不要在这里放置实际的API密钥！使用wrangler secret命令）
 [vars]
-API_BASE = "https://gateway.ai.cloudflare.com/v1/YOUR_ACCOUNT_ID/YOUR_SERVICE_NAME/v1"
+API_BASE = "YOUR_API_BASE_URL"
 MODEL = "YOUR_MODEL_NAME"
 # API_KEY 不应该直接写在配置文件中，请使用 wrangler secret 命令添加
 
